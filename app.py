@@ -1,6 +1,8 @@
 import os #importando bibloteca do python
 
-restaurantes = [ "Bolo na Mesa", "Docinho delicia"]
+restaurantes = [{'nome':"Praça", 'categoria': 'Japoneza', 'ativo': False},
+                {'nome':'Pizza Suprema', 'categoria':'Italiana', 'ativo':True},
+                {'nome':'Cantina', 'categoria':'Italiano', 'ativo': False}]
 
 def exibir_nome_do_programa():
     print(""""
@@ -23,33 +25,60 @@ def exibir_opcoes():
         4.𝒮𝒶𝒾𝓇
         """)
 
+def voltar_ao_menu_principal():
+    input("\nDigite qualquer tecla para voltar ao menu: ")
+    main()
 
 def cadastrar_novo_restaurante():
     os.system('cls')
     print("Cadastro de novos restaurantes ")
     nome_restaurantes = input("Digite o nome do restaurante que você deseja cadastrar: ")
-    restaurantes.append(nome_restaurantes)
+    categoria = input(f"Digite o nome da categoria do restaurante {nome_restaurantes}: ")
+    dados_restaurante = {'nome': nome_restaurantes, 'categoria': categoria, 'ativo': False}
+    restaurantes.append(dados_restaurante)
     print(f"O restaurante {nome_restaurantes} foi cadastrado com sucesso!\n")
-    input("Digite qualquer tecla para voltar ao menu principal")
-    main()#quando eu tirei o main daqui todos os prints apareceram, por que? 
+    #input("Digite qualquer tecla para voltar ao menu principal")
+    #main()quando eu tirei o main daqui todos os prints apareceram, por que? 
+    voltar_ao_menu_principal()
 
 def listar_restaurantes():
     os.system('cls')
     print("Lista de restaurantes cadastradaos: ")
-    for restaurante in restaurantes:
-        print(f".{restaurante}")
-    input("Digite qualquer tecla para voltar ao menu principal")
-    main()
 
-    
+    for restaurante in restaurantes:
+        nome_restaurante = restaurante['nome']
+        categotia_restaurante = restaurante['categoria']
+        ativo_restaurante = 'ativado' if restaurante['ativo'] else 'desativado'
+        print(f"-{nome_restaurante} | {categotia_restaurante} | {ativo_restaurante}")
+    voltar_ao_menu_principal()
+
+def ativar_restaurante():
+    os.system('cls')
+    print("Alterando estado dos restaurantes ")
+    nome_restaurante = input('Digite o nome do restaurante qe deseja mudar o estado: ')
+    restaurante_encontrado = False
+
+    for restaurante in restaurantes: 
+        if nome_restaurante == restaurante['nome']:
+            restaurante_encontrado = True
+            restaurante['ativo'] = not restaurante['ativo']#inverte o valor que estiver na chave 'ativo'
+            if restaurante['ativo']:
+                mensagem = f'O restaurante {nome_restaurante} foi ativado com 3 sucesso'
+            else: 
+                mensagem = f'O restaurante {nome_restaurante} foi desativado com sucesso'
+            print(mensagem)
+    if not restaurante_encontrado:
+        print('O restaurante não encontrado')
+
+    voltar_ao_menu_principal()
+
 def finalizar_app():#para usar função em python uso def e não function
     os.system('cls')#esse os é uma biblioteca do python para para lipara o terminal quando essa função for executada
     print("Encerramdo o programa\n")
 
 def opcao_invalida():
     print("Opção invalida")
-    input("Digite uma tecla para voltar ao menú principal")
-    main()
+    voltar_ao_menu_principal()
 
 def escolher_opcao(): 
     try:#quando eu digitava uma letra era retornado um erro em que era esperado um tipo int e não um str. aqui estou dizendo pro código tentar fazer essa conversão e caso e caso ele não consiga execute o bloco do exept. Assim o codigo não vai quebrar
@@ -60,7 +89,7 @@ def escolher_opcao():
         elif opcao_escolhida == 2:
             listar_restaurantes()
         elif opcao_escolhida == 3:
-            print("Ativar restaurante")
+            ativar_restaurante()
         elif opcao_escolhida == 4:
             finalizar_app()#substituí o print por uma função
         else:
